@@ -35,6 +35,7 @@ const renderHome = () => {
     getGenres()
     trendingContainer.classList.remove('inactive')
     categoriesContainer.classList.remove('inactive')
+    header.classList.remove('inactive')
 }
 
 

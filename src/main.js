@@ -6,7 +6,6 @@ const urlGenres = 'https://api.themoviedb.org/3/genre/movie/list'
 const urlMovieGenrer = 'https://api.themoviedb.org/3/discover/movie?with_genres='
 header2DivImg.onclick = () => location.hash = '#home'
 const btnSeeMore = document.querySelector('.seeMore')
-btnSeeMore.onclick = () => trendingContainer.classList.add('inactive')
 
 const getTrendingMovies = async () => {
     const res = await fetch(`${urlTrendingMovies}?api_key=${apiKey}`)
