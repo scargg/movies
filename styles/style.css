@@ -98,7 +98,19 @@ header form button {
     overflow-x: scroll;
     overflow-y: hidden;
 }
-.trending-movies article img {
+.header2 {
+    padding: 5rem 0 0 2rem;
+    display: flex;
+    row-gap: 2rem;
+}
+.category-movies {
+    padding: 5rem 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+article img {
     width: 15rem;
     height: 22.5rem;
     object-fit: cover;
@@ -118,7 +130,8 @@ header form button {
     color: var(--title-color);
     font-family: var(--text-font);
     font-size: 1.8rem;
-    font-weight: var(--text-weight);    
+    font-weight: var(--text-weight);  
+    cursor: pointer;  
 }
 .categories-list a:before {
     content: '***';
@@ -146,7 +159,24 @@ header form button {
 #id53 { --idColor: var(--green); }
 #id10752 { --idColor: var(--lightBlue); }
 #id37 { --idColor: var(--darkBlue); }
-
+.header2 {
+    display: flex;
+    flex-direction: column;
+}
+.header2-title::before {
+    content: '***';
+    color: transparent;
+    background-color: var(--idColor);
+    border-radius: .8rem;
+    margin-right: 1rem;
+}
+.header2-div--img {
+    width: 4rem;
+    cursor: pointer;
+}
+.header2-img {
+    width: 100%;
+}
 .error {
     position: absolute;
     top: 50%;
