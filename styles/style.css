@@ -98,12 +98,25 @@ header form button {
     overflow-x: scroll;
     overflow-y: hidden;
 }
+.similar-div--container {
+    display: flex;
+    gap: 1rem;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
 .header2 {
     padding: 5rem 0 0 2rem;
     display: flex;
     row-gap: 2rem;
 }
 .category-movies {
+    padding: 5rem 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+.search-movie {
     padding: 5rem 2rem;
     display: flex;
     flex-wrap: wrap;
@@ -124,6 +137,27 @@ article img {
     grid-template-columns: 1fr 1fr;
     row-gap: 1rem;
     padding-top: 2rem;
+}
+.categories-list--details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 1rem;
+    padding-top: 2rem;
+}
+.categories-list--details a {
+    text-decoration: none;
+    color: var(--title-color);
+    font-family: var(--text-font);
+    font-size: 1.8rem;
+    font-weight: var(--text-weight);  
+    cursor: pointer;  
+}
+.categories-list--details a:before {
+    content: '***';
+    color: transparent;
+    background-color: var(--idColor);
+    border-radius: .8rem;
+    margin-right: 1rem;
 }
 .categories-list a {
     text-decoration: none;
@@ -177,12 +211,40 @@ article img {
 .header2-img {
     width: 100%;
 }
+.movie-details {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2rem;
+    padding: 2rem 2rem;
+}
+.similar-div--titles {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.similar-div--titles h2 {
+    font-size: 3rem;
+}
+.similar-rep {
+    color: black;
+    font-size: 1.5rem;
+    font-weight: bolder;
+}
+.similar-rep:before {
+    content: '⭐';
+}
+.similar-description {
+    font-size: 1.7rem;
+    font-weight: 400;
+    font-family: var(--text-font);
+}
 .error {
     position: absolute;
     top: 50%;
     font-size: 2rem;
     font-family: var(--title-font);
 }
+
 .inactive { 
     display: none;
 }
