@@ -75,6 +75,7 @@ const loadCategoryMovie = async (id) => {
         const img = document.createElement('img')
         img.setAttribute('src',`${imgBaseUrl}${movie.poster_path}`)
         article.append(img)
+        article.onclick = () => getMovieDetails(movie.id)
         categoryMovies.append(article)
     });
 }
@@ -98,7 +99,8 @@ const getMovieSearch = async (query) => {
                 const img = document.createElement('img')
                 img.setAttribute('src',`${imgBaseUrl}${movie.poster_path}`)
                 article.append(img)
-                searchMovie.append(article)      
+                article.onclick = () => getMovieDetails(movie.id)
+                searchMovie.append(article)
             })
         }else{
             const h2 = document.createElement('h2')
@@ -120,6 +122,11 @@ const getMovieDetails = async (id) => {
         location.hash = '#movie='
         movieDetails.innerHTML=''
         const data = await res.json()
+        const divImgback = document.createElement('img')
+        divImgback.setAttribute('src',`${imgBaseUrl}${data.poster_path}`)
+        divImgback.classList.add('div-img--back')
+        const divCont = document.createElement('div')
+        divCont.classList.add('div-cont')
         const divTitles = document.createElement('div')
         divTitles.classList.add('similar-div--titles')
         const title = document.createElement('h2')
@@ -149,7 +156,8 @@ const getMovieDetails = async (id) => {
         const similarTitle = document.createElement('h2')
         similarTitle.innerText = 'Peliculas Similares'
         loadSimilarMovies(id)
-        movieDetails.append(divTitles,description,categoryDiv,similarTitle)
+        divCont.append(divTitles,description,categoryDiv,similarTitle)
+        movieDetails.append(divImgback,divCont)
     }
 }
 const loadSimilarMovies = async (id) => {
@@ -167,12 +175,14 @@ const loadSimilarMovies = async (id) => {
         const results = data.results
         console.log(results);
         const similarDiv = document.createElement('div')
+        similarDiv.innerHTML = ''
         results.forEach(movie => {
             similarDiv.classList.add('similar-div--container')
             const article = document.createElement('article')
             const img = document.createElement('img')
             img.setAttribute('src',`${imgBaseUrl}${movie.poster_path}`)
             article.append(img)
+            article.onclick = () => getMovieDetails(movie.id)
             similarDiv.append(article)
             movieDetails.append(similarDiv)
         });

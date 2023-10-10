@@ -20,6 +20,8 @@ const renderSearch = () => {
     categoriesContainer.classList.add('inactive')
     categoryMovies.classList.add('inactive')
     headerArrow.classList.remove('inactive')
+    movieDetails.classList.add('inactive')
+    searchMovie.classList.remove('inactive')
 }
 
 const renderMovie = () => {
@@ -42,6 +44,7 @@ const renderCategory = () => {
     categoriesContainer.classList.add('inactive')
     header2.classList.remove('inactive')
     header2DivImg.classList.remove('inactive')
+    categoryMovies.classList.remove('inactive')
 }
 
 const renderHome = () => {
@@ -55,6 +58,8 @@ const renderHome = () => {
     headerForm.classList.remove('inactive')
     headerTitle.classList.remove('inactive')
     movieDetails.classList.add('inactive')
+    categoryMovies.classList.add('inactive')
+    searchMovie.classList.add('inactive')
 }
 
 
