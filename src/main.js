@@ -20,6 +20,7 @@ let lazyLoader = new IntersectionObserver ((entries) => {
 })
 
 const createMovie = (movies,container,lazyLoading = false) => {
+    container.innerHTML = ''
     movies.forEach(movie => {
         const article = document.createElement('article')
         const img = document.createElement('img')
@@ -42,7 +43,6 @@ const getTrendingMovies = async () => {
         btnError.classList.remove('inactive')
         btnError.innerHTML = `Ocurrio un error: ${res.status} ${movie.message}`
     }else{
-        trendingMovies.innerHTML= ''
         createMovie(movie,trendingMovies,true)     
     }
 }
@@ -65,7 +65,6 @@ const getGenres = async () => {
             categoryList.append(div)
             a.onclick = () => {
                 location.hash = `#category=${genrer.id}-${genrer.name}`;
-                
             }
         })
     }
@@ -77,10 +76,14 @@ const loadCategoryMovie = async (id) => {
             Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYTY1ZDkyNTYyMGJlZDBkNjFlMTQzZWMwNzA5MDM1OCIsInN1YiI6IjY1MWVmM2JhM2QzNTU3MDBmZjYxZjljOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TumRxoDEGKvKFsW118O1yeiuWHAuFuTveS_dMuAGuE8'
         }
     })
+
     const data = await res.json()
     const movies = await data.results
-    categoryMovies.innerHTML = ''
-    createMovie(movies,categoryMovies,true)
+    if (res.status !== 200) {
+        console.log('error');
+    }else {
+        createMovie(movies,categoryMovies,true)
+    }
 }
 
 const getMovieSearch = async (query) => {
@@ -95,7 +98,6 @@ const getMovieSearch = async (query) => {
         console.log('ocurrio un error'+res.status);
     }else {
         const movie = data.results
-        searchMovie.innerHTML=''
         if (movie.length!=0) {
             createMovie(movie,searchMovie,true)
         }else{

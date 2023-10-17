@@ -50,6 +50,7 @@ const renderCategory = () => {
     header2.classList.remove('inactive')
     header2DivImg.classList.remove('inactive')
     categoryMovies.classList.remove('inactive')
+    searchMovie.classList.add('inactive')
     const url = location.hash.split('=')
     const urlId = url[1].split('-')
     header2Title.setAttribute('id',`id${urlId[0]}`)
