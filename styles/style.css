@@ -271,6 +271,48 @@ article img {
     font-family: var(--text-font);
     z-index: 2;
 }
+.trending-movies--loading {
+    width: 150px;
+    height: 225px;
+    background-color: rgb(153, 153, 153);
+    border-radius: .8rem;
+    animation: loading-skeleton infinite 1.5s;
+}
+
+.categories-list--loading {
+    width: 150px;
+    height: 20px;
+    background-color: rgb(153, 153, 153);
+    border-radius: .8rem;
+    animation: loading-skeleton infinite 1.5s;
+}
+.categories-list--loading:nth-child(2) {
+    animation-delay: .2s;
+}
+.categories-list--loading:nth-child(3) {
+    animation-delay: .4s;
+}
+.category-movies--loading {
+    width: 150px;
+    height: 225px;
+    background-color: rgb(153, 153, 153);
+    border-radius: .8rem;
+    animation: loading-skeleton infinite 1.5s;
+}
+.trending-movies--loading:nth-child(2),.category-movies--loading:nth-child(2) {
+    animation-delay: .2s;
+}
+.trending-movies--loading:nth-child(3),.category-movies--loading:nth-child(3) {
+    animation-delay: .4s;
+}
+@keyframes loading-skeleton {
+    0% , 100% {
+        opacity: 100%;
+    }
+    50% {
+        opacity: 0%;
+    }
+}
 .error {
     position: absolute;
     top: 50%;

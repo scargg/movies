@@ -6,15 +6,34 @@ const urlGenres = 'https://api.themoviedb.org/3/genre/movie/list'
 const urlMovieGenrer = 'https://api.themoviedb.org/3/discover/movie?with_genres='
 const urlSearchMovie = 'https://api.themoviedb.org/3/search/movie?query='
 const urlMovieDetails = 'https://api.themoviedb.org/3/movie/'
-header2DivImg.onclick = () => {
-    console.log('back');
-    location.hash = '#home'}
-const btnSeeMore = document.querySelector('.seeMore')
-headerButton.onclick = () => {
-    location.hash = '#search='
-    getMovieSearch(headerInput.value)
-}
 
+
+let lazyLoader = new IntersectionObserver ((entries) => {
+    entries.forEach (entry => {
+
+        if (entry.isIntersecting) {
+            const url = entry.target.getAttribute('data-img')
+            entry.target.setAttribute('src',url)
+        }
+            
+    })
+})
+
+const createMovie = (movies,container,lazyLoading = false) => {
+    movies.forEach(movie => {
+        const article = document.createElement('article')
+        const img = document.createElement('img')
+        article.append(img)
+        img.setAttribute(lazyLoading?'data-img' : 'src' , `${imgBaseUrl}${movie.poster_path}`)
+        container.append(article)
+        article.onclick = () => {
+            location.hash = `#movie=${movie.id}-${movie.title}`;
+        }
+        if (lazyLoading) {
+            lazyLoader.observe(img)
+        }
+    });
+}
 const getTrendingMovies = async () => {
     const res = await fetch(`${urlTrendingMovies}?api_key=${apiKey}`)
     const data = await res.json()
@@ -24,14 +43,7 @@ const getTrendingMovies = async () => {
         btnError.innerHTML = `Ocurrio un error: ${res.status} ${movie.message}`
     }else{
         trendingMovies.innerHTML= ''
-        movie.forEach(movie => {
-            const article = document.createElement('article')
-            const img = document.createElement('img')
-            img.setAttribute('src',`${imgBaseUrl}${movie.poster_path}`)
-            article.append(img)
-            trendingMovies.append(article)
-            article.onclick = () => getMovieDetails(movie.id)
-        });
+        createMovie(movie,trendingMovies,true)     
     }
 }
 
@@ -52,10 +64,8 @@ const getGenres = async () => {
             div.append(a)
             categoryList.append(div)
             a.onclick = () => {
-                location.hash = '#category='
-                header2Title.setAttribute('id',`id${genrer.id}`)
-                header2Title.innerHTML = genrer.name
-                loadCategoryMovie(genrer.id)
+                location.hash = `#category=${genrer.id}-${genrer.name}`;
+                
             }
         })
     }
@@ -70,14 +80,7 @@ const loadCategoryMovie = async (id) => {
     const data = await res.json()
     const movies = await data.results
     categoryMovies.innerHTML = ''
-    movies.forEach(movie => {
-        const article = document.createElement('article')
-        const img = document.createElement('img')
-        img.setAttribute('src',`${imgBaseUrl}${movie.poster_path}`)
-        article.append(img)
-        article.onclick = () => getMovieDetails(movie.id)
-        categoryMovies.append(article)
-    });
+    createMovie(movies,categoryMovies,true)
 }
 
 const getMovieSearch = async (query) => {
@@ -94,14 +97,7 @@ const getMovieSearch = async (query) => {
         const movie = data.results
         searchMovie.innerHTML=''
         if (movie.length!=0) {
-            movie.forEach(movie => {
-                const article = document.createElement('article')
-                const img = document.createElement('img')
-                img.setAttribute('src',`${imgBaseUrl}${movie.poster_path}`)
-                article.append(img)
-                article.onclick = () => getMovieDetails(movie.id)
-                searchMovie.append(article)
-            })
+            createMovie(movie,searchMovie,true)
         }else{
             const h2 = document.createElement('h2')
             h2.innerText = 'No tenemos el titulo'
@@ -119,7 +115,6 @@ const getMovieDetails = async (id) => {
     if (res.status!==200) {
         console.log('ocurrio un error'+res.status);
     }else{
-        location.hash = '#movie='
         movieDetails.innerHTML=''
         const data = await res.json()
         const divImgback = document.createElement('img')
@@ -142,7 +137,6 @@ const getMovieDetails = async (id) => {
         const categoryDiv = document.createElement('div')
         categoryDiv.classList.add('categories-list--details')
         const genres = data.genres
-        console.log(genres);
 
         genres.forEach(genrer => {
             const divgenrer = document.createElement('div')
@@ -173,7 +167,6 @@ const loadSimilarMovies = async (id) => {
     }else{
         const data = await res.json()
         const results = data.results
-        console.log(results);
         const similarDiv = document.createElement('div')
         similarDiv.innerHTML = ''
         results.forEach(movie => {
