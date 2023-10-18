@@ -313,6 +313,19 @@ article img {
         opacity: 0%;
     }
 }
+.trending-pages--container {
+    display: flex;
+    margin-top: 20px;
+    padding-bottom: 20px;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+.trending-pages {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 2rem;
+}
 .error {
     position: absolute;
     top: 50%;

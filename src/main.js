@@ -19,8 +19,8 @@ let lazyLoader = new IntersectionObserver ((entries) => {
     })
 })
 
-const createMovie = (movies,container,lazyLoading = false) => {
-    container.innerHTML = ''
+const createMovie = (movies, container, {lazyLoading = false, clean = true}) => {
+    if (clean) {container.innerHTML = ''}
     movies.forEach(movie => {
         const article = document.createElement('article')
         const img = document.createElement('img')
@@ -36,15 +36,72 @@ const createMovie = (movies,container,lazyLoading = false) => {
     });
 }
 const getTrendingMovies = async () => {
-    const res = await fetch(`${urlTrendingMovies}?api_key=${apiKey}`)
+    const res = await fetch(`${urlTrendingMovies}`,{
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYTY1ZDkyNTYyMGJlZDBkNjFlMTQzZWMwNzA5MDM1OCIsInN1YiI6IjY1MWVmM2JhM2QzNTU3MDBmZjYxZjljOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TumRxoDEGKvKFsW118O1yeiuWHAuFuTveS_dMuAGuE8'
+        }
+    })
     const data = await res.json()
     const movie = data.results
     if (res.status!==200) {
         btnError.classList.remove('inactive')
         btnError.innerHTML = `Ocurrio un error: ${res.status} ${movie.message}`
     }else{
-        createMovie(movie,trendingMovies,true)     
+        createMovie(movie,trendingMovies,{lazyLoading : true , clean : true})     
     }
+}
+
+const loadTrendingPages = async () => {
+    const res = await fetch(`${urlTrendingMovies}`,{
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYTY1ZDkyNTYyMGJlZDBkNjFlMTQzZWMwNzA5MDM1OCIsInN1YiI6IjY1MWVmM2JhM2QzNTU3MDBmZjYxZjljOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TumRxoDEGKvKFsW118O1yeiuWHAuFuTveS_dMuAGuE8'
+        }
+    })
+    const data = await res.json()
+    maxPage = data.total_pages
+    console.log(maxPage);
+    const movies = data.results
+    
+    if (res.status!==200) {
+        btnError.classList.remove('inactive')
+        btnError.innerHTML = `Ocurrio un error: ${res.status} ${movie.message}`
+    }else{
+        createMovie(movies,trendingPages,{lazyLoading : true , clean : true})
+        //const btnMoreTrending = document.createElement('button')
+        //btnMoreTrending.innerText = 'More'
+        //trendingPagesContainer.appendChild(btnMoreTrending)
+        //btnMoreTrending.onclick = () => {
+        //    btnMoreTrending.remove()
+        //    loadTrendingPages(page + 1)
+        //}
+        
+    }
+}
+const loadPaginetedPages = async () => {
+
+    const {scrollTop,scrollHeight,clientHeight} = document.documentElement
+    const scrollIsBottom = (scrollTop + clientHeight) >= scrollHeight
+    const pageIsNotMax = page <= maxPage
+    if (scrollIsBottom && pageIsNotMax) {
+        page++;
+
+        const res = await fetch(`${urlTrendingMovies}?page=${page}`,{
+            method: 'GET',
+            headers: {
+              accept: 'application/json',
+              Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYTY1ZDkyNTYyMGJlZDBkNjFlMTQzZWMwNzA5MDM1OCIsInN1YiI6IjY1MWVmM2JhM2QzNTU3MDBmZjYxZjljOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TumRxoDEGKvKFsW118O1yeiuWHAuFuTveS_dMuAGuE8'
+            }
+        })
+
+        const data = await res.json()
+        const movies = data.results;
+        createMovie(movies, trendingPages, { lazyLoad: true, clean: false })
+    }
+    
 }
 
 const getGenres = async () => {
@@ -78,11 +135,37 @@ const loadCategoryMovie = async (id) => {
     })
 
     const data = await res.json()
+    maxPage = data.total_pages
     const movies = await data.results
     if (res.status !== 200) {
         console.log('error');
     }else {
-        createMovie(movies,categoryMovies,true)
+        createMovie(movies,categoryMovies,{lazyLoading : true , clean : true})
+    }
+}
+
+function getCategoryPages  (id)  {
+    return async () => {
+        const {scrollTop,scrollHeight,clientHeight} = document.documentElement
+        const scrollIsBottom = (scrollTop + clientHeight) >= scrollHeight
+        const pageIsNotMax = page <= maxPage
+        if (scrollIsBottom && pageIsNotMax){
+            page++
+            const res = await fetch(`${urlMovieGenrer}${id}&page=${page}`,{
+                method:'GET',
+                headers: {
+                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYTY1ZDkyNTYyMGJlZDBkNjFlMTQzZWMwNzA5MDM1OCIsInN1YiI6IjY1MWVmM2JhM2QzNTU3MDBmZjYxZjljOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TumRxoDEGKvKFsW118O1yeiuWHAuFuTveS_dMuAGuE8'
+                }
+            })
+        
+            const data = await res.json()
+            const movies = await data.results
+            if (res.status !== 200) {
+                console.log('error');
+            }else {
+                createMovie(movies,categoryMovies,{lazyLoading : true , clean : false})
+            }
+        }
     }
 }
 
@@ -94,19 +177,39 @@ const getMovieSearch = async (query) => {
         }
     })
     const data = await res.json()
+    maxPage = data.total_pages
+    console.log(maxPage);
     if (res.status!==200) {
         console.log('ocurrio un error'+res.status);
     }else {
         const movie = data.results
-        if (movie.length!=0) {
-            createMovie(movie,searchMovie,true)
-        }else{
-            const h2 = document.createElement('h2')
-            h2.innerText = 'No tenemos el titulo'
-            searchMovie.append(h2)
+        console.log(movie);
+        createMovie(movie,searchMovie,{lazyLoading : true , clean : true})
+        
+    }
+}
+
+function getMovieSearchPages  (query)  {
+    return async () => {
+        const {scrollTop,scrollHeight,clientHeight} = document.documentElement
+        const scrollIsBottom = (scrollTop + clientHeight) >= scrollHeight
+        const pageIsNotMax = page <= maxPage
+        if (scrollIsBottom && pageIsNotMax){
+            page++
+            const res = await fetch(`${urlSearchMovie}${query}&page=${page}`,{
+                method: 'GET',
+                headers: {
+                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYTY1ZDkyNTYyMGJlZDBkNjFlMTQzZWMwNzA5MDM1OCIsInN1YiI6IjY1MWVmM2JhM2QzNTU3MDBmZjYxZjljOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TumRxoDEGKvKFsW118O1yeiuWHAuFuTveS_dMuAGuE8'
+                }
+            })
+                const data = await res.json()
+                const movie = data.results
+                createMovie(movie,searchMovie,{lazyLoading : true , clean : false}) 
         }
     }
 }
+
+
 const getMovieDetails = async (id) => {
     const res = await fetch(`${urlMovieDetails}${id}`,{
         method: 'GET',
