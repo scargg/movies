@@ -9,6 +9,8 @@ headerButton.addEventListener('click', () => {
 
 header2DivImg.addEventListener('click', () => {
     location.hash = '#home';
+    page = 1
+    console.log(page);
   });
 seeMore.addEventListener('click',() => {
     location.hash = '#trends'
@@ -41,10 +43,12 @@ const renderTrends = () => {
     searchMovie.classList.add('inactive')
     categoryMovies.classList.add('inactive')
     movieDetails.classList.add('inactive')
+    favourites.classList.add('inactive')
     loadTrendingPages()
     infiniteScroll = loadPaginetedPages
 }
 const renderSearch = () => {
+    headerForm.classList.remove('inactive')
     trendingPagesContainer.classList.add('inactive')
     header2.classList.add('inactive')
     trendingContainer.classList.add('inactive')
@@ -53,6 +57,7 @@ const renderSearch = () => {
     headerArrow.classList.remove('inactive')
     movieDetails.classList.add('inactive')
     searchMovie.classList.remove('inactive')
+    favourites.classList.add('inactive')
     const url = location.hash.split('=')
     console.log(url[1])
     getMovieSearch(url[1])
@@ -70,6 +75,7 @@ const renderMovie = () => {
     headerForm.classList.add('inactive')
     header2.classList.add('inactive')
     trendingPagesContainer.classList.add('inactive')
+    favourites.classList.add('inactive')
     const url = location.hash.split('=')
     const urlId = url[1].split('-')
     getMovieDetails(urlId[0])
@@ -84,12 +90,14 @@ const renderCategory = () => {
     searchMovie.classList.add('inactive')
     movieDetails.classList.add('inactive')
     trendingPagesContainer.classList.add('inactive')
+    favourites.classList.add('inactive')
     const url = location.hash.split('=')
     const urlId = url[1].split('-')
     header2Title.setAttribute('id',`id${urlId[0]}`)
     header2Title.innerHTML = urlId[1]
     loadCategoryMovie(urlId[0])
     infiniteScroll = getCategoryPages(urlId[0])
+
 }
 
 const renderHome = () => {
@@ -104,7 +112,9 @@ const renderHome = () => {
     categoryMovies.classList.add('inactive')
     searchMovie.classList.add('inactive')
     trendingPagesContainer.classList.add('inactive')
+    favourites.classList.remove('inactive')
     getGenres()
     getTrendingMovies()
+    getLikedMovies()
 }
 

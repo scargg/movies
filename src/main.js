@@ -7,6 +7,30 @@ const urlMovieGenrer = 'https://api.themoviedb.org/3/discover/movie?with_genres=
 const urlSearchMovie = 'https://api.themoviedb.org/3/search/movie?query='
 const urlMovieDetails = 'https://api.themoviedb.org/3/movie/'
 
+function likedMoviesList () {
+    const item = JSON.parse(localStorage.getItem('liked_movies'))
+    let movies
+
+    if (item) {
+        movies = item
+    } else {
+        movies = {}
+    }
+
+    return movies
+}
+
+function likeMovie (movie) {
+    const likedMovies = likedMoviesList()
+
+    if (likedMovies[movie.id]) {
+        likedMovies[movie.id] = undefined
+    } else {
+        likedMovies[movie.id] = movie
+    }
+
+    localStorage.setItem('liked_movies',JSON.stringify(likedMovies))
+}
 
 let lazyLoader = new IntersectionObserver ((entries) => {
     entries.forEach (entry => {
@@ -26,8 +50,17 @@ const createMovie = (movies, container, {lazyLoading = false, clean = true}) => 
         const img = document.createElement('img')
         article.append(img)
         img.setAttribute(lazyLoading?'data-img' : 'src' , `${imgBaseUrl}${movie.poster_path}`)
+        const btnLike = document.createElement('button')
+        btnLike.classList.add('btn-like')
+        article.append(btnLike)
         container.append(article)
-        article.onclick = () => {
+        likedMoviesList()[movie.id]? btnLike.classList.add('btn-liked') : btnLike.classList.add('btn-like')
+        btnLike.onclick = () => {
+            btnLike.classList.toggle('btn-liked')
+            likeMovie(movie)
+            getLikedMovies()
+        }
+        img.onclick = () => {
             location.hash = `#movie=${movie.id}-${movie.title}`;
         }
         if (lazyLoading) {
@@ -178,22 +211,22 @@ const getMovieSearch = async (query) => {
     })
     const data = await res.json()
     maxPage = data.total_pages
-    console.log(maxPage);
+    console.log(page);
     if (res.status!==200) {
         console.log('ocurrio un error'+res.status);
     }else {
         const movie = data.results
         console.log(movie);
-        createMovie(movie,searchMovie,{lazyLoading : true , clean : true})
-        
+        createMovie(movie,searchMovie,{lazyLoading : true , clean : true}) 
     }
 }
 
 function getMovieSearchPages  (query)  {
-    return async () => {
+    return async function ()  {
         const {scrollTop,scrollHeight,clientHeight} = document.documentElement
-        const scrollIsBottom = (scrollTop + clientHeight) >= scrollHeight
+        const scrollIsBottom = (scrollTop + clientHeight) >= scrollHeight - 50
         const pageIsNotMax = page <= maxPage
+        console.log(scrollIsBottom);
         if (scrollIsBottom && pageIsNotMax){
             page++
             const res = await fetch(`${urlSearchMovie}${query}&page=${page}`,{
@@ -202,11 +235,19 @@ function getMovieSearchPages  (query)  {
                     Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYTY1ZDkyNTYyMGJlZDBkNjFlMTQzZWMwNzA5MDM1OCIsInN1YiI6IjY1MWVmM2JhM2QzNTU3MDBmZjYxZjljOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TumRxoDEGKvKFsW118O1yeiuWHAuFuTveS_dMuAGuE8'
                 }
             })
-                const data = await res.json()
-                const movie = data.results
-                createMovie(movie,searchMovie,{lazyLoading : true , clean : false}) 
+            const data = await res.json()
+            const movie = data.results
+            createMovie(movie,searchMovie,{lazyLoading : true , clean : false}) 
         }
     }
+}
+
+
+function getLikedMovies () {
+    const movieList = Object.values(likedMoviesList())
+    console.log(movieList);
+    createMovie(movieList,favouriteMovies,{lazyLoading: true, clean: true})
+    getTrendingMovies()
 }
 
 

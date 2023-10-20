@@ -102,6 +102,34 @@ header form button {
     overflow-x: scroll;
     overflow-y: hidden;
 }
+.favourite-movies {
+    padding: 5rem 2rem;
+}
+.favourite-container {
+    display: flex;
+    gap: 1rem;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+article {
+    position: relative;
+}
+.btn-like {
+    position: absolute;
+    right: 0;
+    width: 30px;
+    border-radius: 30px;
+    background-color: hsla(0, 0%, 100%, 0);
+}
+.btn-like::before {
+    content: '💜';
+}
+.btn-liked {
+    background-color: rgba(255, 255, 255, 0);
+}
+.btn-liked::before {
+    content: '💔';
+}
 .similar-div--container {
     display: flex;
     gap: 1rem;
