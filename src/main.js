@@ -16,7 +16,6 @@ function likedMoviesList () {
     } else {
         movies = {}
     }
-
     return movies
 }
 

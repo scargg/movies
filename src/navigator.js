@@ -8,9 +8,7 @@ headerButton.addEventListener('click', () => {
   });
 
 header2DivImg.addEventListener('click', () => {
-    location.hash = '#home';
-    page = 1
-    console.log(page);
+    history.back();
   });
 seeMore.addEventListener('click',() => {
     location.hash = '#trends'
@@ -18,6 +16,7 @@ seeMore.addEventListener('click',() => {
 window.addEventListener('load', navigator, false)
 window.addEventListener('hashchange', navigator, false)
 window.addEventListener('scroll', infiniteScroll, false)
+window.addEventListener('hashchange', ()=>{page = 1;console.log(page);})
 
 function navigator () {
 
@@ -28,8 +27,8 @@ function navigator () {
     (location.hash.startsWith('#movie='))? renderMovie():
     (location.hash.startsWith('#category='))? renderCategory(): renderHome()
 
-    location.hash
-
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     if(infiniteScroll){window.addEventListener('scroll',infiniteScroll, false)}
 
 }
